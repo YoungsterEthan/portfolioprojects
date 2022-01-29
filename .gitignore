@@ -1,0 +1,17 @@
+/.DS_Store
+/.ipynb_checkpoints
+/.vscode
+/PdandNp.py
+/Pokemon3.db
+/PokemonData.py
+/__pycache__
+/gcd.py
+/insurance.csv
+/medicalInsurance.py
+/numpyPractice.py
+/original.db
+/pokemon.csv
+/pokemonSql.py
+/pokepandas.py
+/sqlPractice.py
+/test.py
