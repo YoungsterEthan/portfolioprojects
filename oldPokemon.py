@@ -17,11 +17,11 @@ class move:
     
 
     def __init__(self, name):
-        allMoves = pd.read_csv("moves.csv")
+        allMoves = pd.read_csv("All_Moves.csv")
         self.name = name
         self.type = allMoves[allMoves.Name == self.name]['Type'].values[0].lower()
         self.power = int(allMoves[allMoves.Name == self.name]['Power'].values[0])
-        self.accuracy = int(allMoves[allMoves.Name == self.name]['Accuracy'].values[0])
+        self.accuracy = int(allMoves[allMoves.Name == self.name]['Acc'].values[0])
 
     def __repr__(self):
         return self.name
@@ -268,20 +268,45 @@ class Pokemon:
 
 #sets pokemon1 moves
 pokemon = pd.read_csv('pokestats.csv')
-poke1 = input("Choose Pokemon: ").title()
+#checking if pokemon1 is in dataframe 
+notFound = True
+while notFound:
+    poke1 = input("Choose Pokemon: ").title()
+    if poke1 in pokemon.name.values:
+        notFound = False
+    else:
+        print("Pokemon Does not exist. Try again")
+
 moveset1 = []
 for i in range(1,5):
-    hit = input("Choose move #" + str(i) + ": ").title()
-    moveset1.append(move(hit))
-
-
+    inMoves = True
+    while inMoves:
+        try:
+            hit = input("Choose move #" + str(i) + ": ").title()
+            moveset1.append(move(hit))
+            inMoves = False   
+        except IndexError:
+            print("Move does not exist. Try again")
 
 #sets pokemon2 moves
-poke2 = input("Choose Pokemon 2: ").title()
+notFound2 = True
+while notFound2:
+    poke1 = input("Choose Pokemon: ").title()
+    if poke1 in pokemon.name.values:
+        notFound2 = False
+    else:
+        print("Pokemon Does not exist. Try again")
 moveset2 = []
 for i in range(1,5):
-    hit = input("Choose move #" + str(i) + ": ").title()
-    moveset2.append(move(hit))
+    inMoves2 = True
+    while inMoves2:
+        try:
+            hit = input("Choose move #" + str(i) + ": ").title()
+            moveset2.append(move(hit))
+            inMoves2 = False
+        except IndexError:
+            print("Move does not exist. Try again")
+        
 
 
 
