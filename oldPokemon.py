@@ -12,16 +12,21 @@ def delay_print(s):
         sys.stdout.flush()
         time.sleep(0.05)
 
+def print_full(df):
+    import pandas as pd
+    pd.set_option('display.max_rows', len(df))
+    print(df)
+    pd.reset_option('display.max_rows')
 
 class move:
     
 
-    def __init__(self, name):
-        allMoves = pd.read_csv("All_Moves.csv")
+    def __init__(self, name, df):
+        
         self.name = name
-        self.type = allMoves[allMoves.Name == self.name]['Type'].values[0].lower()
-        self.power = int(allMoves[allMoves.Name == self.name]['Power'].values[0])
-        self.accuracy = int(allMoves[allMoves.Name == self.name]['Acc'].values[0])
+        self.type = df[df.Name == self.name]['Type'].values[0].lower()
+        self.power = int(df[df.Name == self.name]['Power'].values[0])
+        self.accuracy = int(df[df.Name == self.name]['Acc'].values[0])
 
     def __repr__(self):
         return self.name
@@ -268,8 +273,11 @@ class Pokemon:
 
 #sets pokemon1 moves
 pokemon = pd.read_csv('pokestats.csv')
+moveList = pd.read_csv('All_Moves.csv')
+
 #checking if pokemon1 is in dataframe 
 notFound = True
+
 while notFound:
     poke1 = input("Choose Pokemon: ").title()
     if poke1 in pokemon.name.values:
@@ -277,35 +285,61 @@ while notFound:
     else:
         print("Pokemon Does not exist. Try again")
 
+#creating list of moves to choose from
+def createDeck(types):
+    try:
+        unrefined = moveList[(moveList.Type == types[0]) | (moveList.Type == types[1])]
+    except IndexError:
+        unrefined = moveList[(moveList.Type == types[0])]
+    refined = unrefined[['Name', 'Type', 'Acc', 'Category', 'Power']]
+    return refined
+
+try:
+    mAvailable = createDeck([pokemon[pokemon.name == poke1]['type1'].values[0].title(), pokemon[pokemon.name == poke1]['type2'].values[0].title()])
+except AttributeError:
+    mAvailable = createDeck([pokemon[pokemon.name == poke1]['type1'].values[0].title()])
+
+    
+
+print("Moves Available")
+print_full(mAvailable)
+
 moveset1 = []
 for i in range(1,5):
     inMoves = True
     while inMoves:
         try:
             hit = input("Choose move #" + str(i) + ": ").title()
-            moveset1.append(move(hit))
+            moveset1.append(move(hit, mAvailable))
             inMoves = False   
         except IndexError:
-            print("Move does not exist. Try again")
+            print("Move not in set. Try again")
 
 #sets pokemon2 moves
+
 notFound2 = True
 while notFound2:
-    poke1 = input("Choose Pokemon: ").title()
-    if poke1 in pokemon.name.values:
+    poke2 = input("Choose Pokemon: ").title()
+    if poke2 in pokemon.name.values:
         notFound2 = False
     else:
         print("Pokemon Does not exist. Try again")
+
+mAvailable2 = createDeck([pokemon[pokemon.name == poke2]['type1'].values[0].title(), pokemon[pokemon.name == poke2]['type2'].values[0].title()])
+
+print("Moves Available")
+print_full(mAvailable2)
+
 moveset2 = []
 for i in range(1,5):
     inMoves2 = True
     while inMoves2:
         try:
             hit = input("Choose move #" + str(i) + ": ").title()
-            moveset2.append(move(hit))
+            moveset2.append(move(hit, mAvailable2))
             inMoves2 = False
         except IndexError:
-            print("Move does not exist. Try again")
+            print("Move not in set. Try again")
         
 
 
