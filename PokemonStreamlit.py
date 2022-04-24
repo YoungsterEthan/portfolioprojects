@@ -4,6 +4,8 @@ import random
 import numpy as np
 import pandas as pd
 import simpleaudio as sa
+import streamlit as st
+import pygame
 
 
 #function that displays text slowly
@@ -15,7 +17,6 @@ def delay_print(s):
 
 #prints all of the dataframe
 def print_full(df):
-    import pandas as pd
     pd.set_option('display.max_rows', len(df))
     print(df)
     pd.reset_option('display.max_rows')
@@ -100,7 +101,7 @@ class move:
                 return int(damage)
             
         else:
-            print(f"\n{Pokemon.name}'s attack has missed!")
+            st.write(f"\n{Pokemon.name}'s attack has missed!")
             string_attack = ""
             return 0
 
@@ -125,30 +126,30 @@ class Pokemon:
 
     def fight(self, Pokemon2):
         # Printing pokemon 1 stats
-        print(f'{self.name} VS {Pokemon2.name}!')
+        st.write(f'{self.name} VS {Pokemon2.name}!')
 
         time.sleep(1)
 
-        print(f'\n{self.name}')
-        print(f'HEALTH: {self.hp}')
-        print(f'ATTACK: {self.attack}')
-        print(f'SP.ATTACK: {self.spAttack}')
-        print(f'DEFENSE: {self.defense}')
-        print(f'SP.DEFENSE: {self.spDefense}')
+        st.write(f'\n{self.name}')
+        st.write(f'HEALTH: {self.hp}')
+        st.write(f'ATTACK: {self.attack}')
+        st.write(f'SP.ATTACK: {self.spAttack}')
+        st.write(f'DEFENSE: {self.defense}')
+        st.write(f'SP.DEFENSE: {self.spDefense}')
 
 
         time.sleep(0.5)
-        # printing pokemon 2 stats
-        print(f'\n{Pokemon2.name}')
-        print(f'HEALTH: {Pokemon2.hp}')
-        print(f'ATTACK: {Pokemon2.attack}')
-        print(f'SP.ATTACK: {Pokemon2.spAttack}')
-        print(f'DEFENSE: {Pokemon2.defense}')
-        print(f'SP.DEFENSE: {Pokemon2.spDefense}')
+        # st.writeing pokemon 2 stats
+        st.write(f'\n{Pokemon2.name}')
+        st.write(f'HEALTH: {Pokemon2.hp}')
+        st.write(f'ATTACK: {Pokemon2.attack}')
+        st.write(f'SP.ATTACK: {Pokemon2.spAttack}')
+        st.write(f'DEFENSE: {Pokemon2.defense}')
+        st.write(f'SP.DEFENSE: {Pokemon2.spDefense}')
 
         time.sleep(1)
-        print(f'{self.name}          HEALTH: {self.Bars} ({self.hp} / {self.staticHp})')
-        print(f'{Pokemon2.name}          HEALTH: {Pokemon2.Bars} ({Pokemon2.hp} / {Pokemon2.staticHp})')
+        st.write(f'{self.name}          HEALTH: {self.Bars} ({self.hp} / {self.staticHp})')
+        st.write(f'{Pokemon2.name}          HEALTH: {Pokemon2.Bars} ({Pokemon2.hp} / {Pokemon2.staticHp})')
 
         objectDict = {}
 
@@ -161,24 +162,24 @@ class Pokemon:
 
         while self.hp > 0 and Pokemon2.hp > 0:
             # Display Screen
-            print(f'Go {objectDict["Fast"].name}!')
+            st.write(f'Go {objectDict["Fast"].name}!')
             for i, x in enumerate(objectDict["Fast"].moves):
-                print(f'{i + 1}', x)
+                st.write(f'{i + 1}', x)
             # Testing for bad input
             while True:
                 try:
                     isValid = False
-                    choice = int(input("Pick a move: "))
+                    choice = int(st.text_input("Pick a move: "))
                     while not isValid:
                         if choice < 1 or choice > 4:
-                            print("Invalid Input. Please try again")
-                            choice = int(input("Pick a move: "))
+                            st.write("Invalid Input. Please try again")
+                            choice = int(st.text_input("Pick a move: "))
                         else:
                             isValid = True
                     break
 
                 except ValueError:
-                    print("Invalid Input. Please try again")
+                    st.write("Invalid Input. Please try again")
             delay_print(f'{objectDict["Fast"].name} used {objectDict["Fast"].moves[choice - 1]}')
 
             # Determine Damage
@@ -194,9 +195,9 @@ class Pokemon:
             if objectDict["Slow"].hp < 0:
                 objectDict["Slow"].hp = 0
 
-            print(
+            st.write(
                 f'{objectDict["Fast"].name}          HEALTH: {objectDict["Fast"].Bars} ({objectDict["Fast"].hp} / {objectDict["Fast"].staticHp})')
-            print(
+            st.write(
                 f'{objectDict["Slow"].name}          HEALTH: {objectDict["Slow"].Bars} ({objectDict["Slow"].hp} / {objectDict["Slow"].staticHp})')
 
             # check if Pokemon2 is alive
@@ -205,31 +206,31 @@ class Pokemon:
                 break
 
             # Display screen
-            print(f'Go {objectDict["Slow"].name}!')
+            st.write(f'Go {objectDict["Slow"].name}!')
             for i, x in enumerate(objectDict["Slow"].moves):
-                print(f'{i + 1}', x)
+                st.write(f'{i + 1}', x)
 
             # Handling bad data
             while True:
                 try:
                     isValid = False
-                    choice = int(input("Pick a move: "))
+                    choice = int(st.text_input("Pick a move: "))
                     while not isValid:
                         if choice < 1 or choice > 4:
-                            print("Invalid Input. Please try again")
-                            choice = int(input("Pick a move: "))
+                            st.write("Invalid Input. Please try again")
+                            choice = int(st.text_input("Pick a move: "))
                         else:
                             isValid = True
                     break
                 except ValueError:
-                    print("Invalid Input. Please try again")
+                    st.write("Invalid Input. Please try again")
 
             delay_print(f'{objectDict["Slow"].name} used {objectDict["Slow"].moves[choice - 1]}')
 
             # Determine Damage
             objectDict["Fast"].hp -= objectDict["Slow"].moves[choice - 1].use_move(objectDict["Slow"],
                                                                                    objectDict["Fast"])
-            print("\n" + string_attack)
+            st.write("\n" + string_attack)
             time.sleep(1)
 
             barPercentage2 = objectDict["Fast"].hp / objectDict["Fast"].staticHp
@@ -240,9 +241,9 @@ class Pokemon:
             if objectDict["Fast"].hp < 0:
                 objectDict["Fast"].hp = 0
 
-            print(
+            st.write(
                 f'{objectDict["Fast"].name}          HEALTH: {objectDict["Fast"].Bars} ({objectDict["Fast"].hp} / {objectDict["Fast"].staticHp})')
-            print(
+            st.write(
                 f'{objectDict["Slow"].name}          HEALTH: {objectDict["Slow"].Bars} ({objectDict["Slow"].hp} / {objectDict["Slow"].staticHp})')
 
             # check if Pokemon1 is alive
@@ -261,13 +262,13 @@ moveList = pd.read_csv('All_Moves.csv')
 
 #checking if pokemon1 is in dataframe 
 notFound = True
-
 while notFound:
-    poke1 = input("Choose Pokemon: ").title()
+
+    poke1 = st.text_input("Choose Pokemon 1: ", key = '1').title()
     if poke1 in pokemon.name.values:
         notFound = False
     else:
-        print("Pokemon Does not exist. Try again")
+        st.write("Pokemon Does not exist. Try again")
 
 #creating list of moves to choose from
 def createDeck(types):
@@ -286,47 +287,47 @@ except AttributeError:
 
     
 
-print("Moves Available")
-print_full(mAvailable)
+st.write("Moves Available")
+st.write(mAvailable)
 
 moveset1 = []
 for i in range(1,5):
     inMoves = True
     while inMoves:
         try:
-            hit = int(input("Choose move #" + str(i) + ": "))
+            hit = int(st.text_input("Choose move #" + str(i) + ": ", key =3))
             moveset1.append(move(mAvailable.iloc[hit]['Name'], mAvailable)) #Gets the move based on the index typed in by user
             inMoves = False   
         except IndexError:
-            print("Move not in set. Try again")
+            st.write("Move not in set. Try again")
 
 #sets pokemon2 moves
 
 notFound2 = True
 while notFound2:
-    poke2 = input("Choose Pokemon: ").title()
+    poke2 = st.text_input("Choose Pokemon: ").title()
     if poke2 in pokemon.name.values:
         notFound2 = False
     else:
-        print("Pokemon Does not exist. Try again")
+        st.write("Pokemon Does not exist. Try again")
 try:
     mAvailable2 = createDeck([pokemon[pokemon.name == poke2]['type1'].values[0].title(), pokemon[pokemon.name == poke2]['type2'].values[0].title()]).reset_index(drop=True)
 except AttributeError:
     mAvailable2 = createDeck([pokemon[pokemon.name == poke2]['type1'].values[0].title()]).reset_index(drop=True)
 
-print("Moves Available")
-print_full(mAvailable2)
+st.write("Moves Available")
+st.write(mAvailable2)
 
 moveset2 = []
 for i in range(1,5):
     inMoves2 = True
     while inMoves2:
         try:
-            hit = int(input("Choose move #" + str(i) + ": "))
+            hit = int(st.text_input("Choose move #" + str(i) + ": "))
             moveset2.append(move(mAvailable2.iloc[hit]['Name'], mAvailable2))
             inMoves2 = False
         except IndexError:
-            print("Move not in set. Try again")
+            st.write("Move not in set. Try again")
 
 #Set pokemon with stats
 pokemon1 = Pokemon(pokemon[pokemon.name == poke1]['name'].values[0], [moveset1[0], moveset1[1], moveset1[2], moveset1[3]], pokemon[pokemon.name == poke1]['type1'].values[0],
